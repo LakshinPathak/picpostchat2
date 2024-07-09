@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Media App</title>
+  <link rel="stylesheet" href="fonts/material-icon/css/material-design-iconic-font.min.css">
+  <link rel="stylesheet" href="css/style3.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <div id="g_id_onload"
+    data-client_id="1010900816162-tecnq3ip1pcudnmhv2ohnmscu6h49s6u.apps.googleusercontent.com"
+    data-callback="onGoogleSignIn">
+</head>
+<body>
+  <div class="main">
+    <section class="sign-in">
+      <div class="container">
+          <div class="signin-content">
+              <div class="signin-image">
+                  <figure><img src="image1.png" alt="sign up image"></figure>
+              </div>
+              <div class="signin-form">
+                  <h2 class="form-title" style="color: rgb(145, 118, 246);">PicPostChat</h2>
+                  <form action="#" class="register-form" method="post">
+                      <div class="form-group">
+                          <label for="your_name"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                          <input type="email" class="c-panel__input" id="username" placeholder="Username">
+                      </div>
+                      <div class="form-group">
+                          <label for="your_pass"><i class="zmdi zmdi-lock"></i></label>
+                          <input type="password" class="c-panel__input" id="password" placeholder="Password">
+                      </div>
+                      <p>Don't have an account? <a href="signup.html"> Sign up</a></p>
+                      <div class="form-group form-button">
+                        <a href="#" class="form-submit" onclick="login()">Log In</a>
+                      </div>
+                  </form>
+                  <div class="g_id_signin" data-onsuccess="onGoogleSignIn"></div>
+              </div>
+          </div>
+      </div>
+  </section>
+</div>
+  <script>
+    async function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+          const loggedInUser = document.getElementById('username').value;
+          sessionStorage.setItem('loginusername', loggedInUser);
+
+          if (data.isAdmin) {
+            sessionStorage.setItem('admin_name1', username);
+            window.location.href = `/admin.html`;
+          } else {
+            window.location.href = `feed.html?script1=true`;
+          }
+        } else {
+          alert(data.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+      }
+    }
+
+  async  function onGoogleSignIn(googleUser) {
+
+      try {
+        console.log("lakshinnnnnnnnn");
+        const tokens1 = googleUser.credential.split(".");
+        const responsePayload1 = JSON.parse(atob(tokens1[1]));
+
+        const username = responsePayload1.name;
+            const password = '123'; // default password in Google registration
+
+        const response = await fetch('/api/auth/login_google', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+          const loggedInUser = username;
+          sessionStorage.setItem('loginusername', loggedInUser);
+
+          if (data.isAdmin) {
+            sessionStorage.setItem('admin_name1', username);
+            window.location.href = `/admin.html`;
+          } else {
+            window.location.href = `feed.html?script1=true`;
+          }
+        } else {
+          alert(data.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+      }
+
+
+    }
+  </script>
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

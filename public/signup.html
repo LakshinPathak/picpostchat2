@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/style4.css">
+    <link rel="stylesheet" href="fonts/material-icon/css/material-design-iconic-font.min.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- <script src="https://apis.google.com/js/platform.js"></script> -->
+    <!-- <meta name="google-signin-client_id" content="1010900816162-tecnq3ip1pcudnmhv2ohnmscu6h49s6u.apps.googleusercontent.com"> -->
+    <div id="g_id_onload"
+    data-client_id="1010900816162-tecnq3ip1pcudnmhv2ohnmscu6h49s6u.apps.googleusercontent.com"
+    data-callback="onGoogleSignUp">
+</div>
+    <title>Signup</title>
+</head>
+<body>
+
+<div class="main">
+    <section class="signup">
+        <div class="container">
+            <div class="signup-content">
+                <div class="signup-form">
+                    <h2 class="form-title">Sign up</h2>
+                    <form action="#" method="post" class="register-form">
+                        <div class="form-group">
+                            <label for="username"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                            <input type="text" name="username" id="username" placeholder="Your Name"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email"><i class="zmdi zmdi-email"></i></label>
+                            <input type="email" name="email" id="email" placeholder="Your Email"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="pass"><i class="zmdi zmdi-lock"></i></label>
+                            <input type="password" name="pass" id="password" placeholder="Password"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="re-pass"><i class="zmdi zmdi-image"></i></label>
+                            <input type="file"  name ="re-pass" class="c-panel__input" id="profileImage" accept="image/*">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bio"><i class="zmdi zmdi-comment-text"></i></label>
+                            <input type="text" name="bio" class="c-panel__input" id="bio" placeholder="Bio">
+                        </div>
+
+                        <div class="form-group form-button">
+                            <a href="#" class="form-submit" onclick="signup()">Sign Up</a>
+                        </div>
+
+                        <!-- Google Sign Up -->
+                        <div class="form-group form-button">
+                            <div class="g_id_signin"  id="abc"data-onsuccess="onGoogleSignUp">Sign Up with Google</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="signup-image">
+                    <figure><img src="image2.png" alt="Sign up image"></figure>
+                    <a href="index.html" class="signup-image-link">Already Registered</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    async function signup() {
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const profileImage = document.getElementById('profileImage').files[0];
+        const bio = document.getElementById('bio').value;
+
+        // Ensure required fields are filled
+        if (!username || !email || !password) {
+            alert('Username, Email, and Password are required');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('username', username);
+        formData.append('email', email);
+        formData.append('password', password);
+        formData.append('profileImage', profileImage);
+        formData.append('bio', bio);
+
+        try {
+            const response = await fetch('/api/auth/signup', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                alert('Signup successful!');
+                window.location.href = `index.html`;
+            } else {
+                const data = await response.json();
+                if (data.message.includes('exists')) {
+                    alert('Username already exists. Please choose a different username.');
+                } else {
+                    alert('Signup failed. Please try again later.');
+                }
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        }
+    }
+
+    // function handleCredentialResponse(googleUser) {
+    //   // console.log("Encoded JWT ID token: " + googleUser.credential);
+    //   const tokens = googleUser.credential.split(".");
+    //   const responsePayload = JSON.parse(atob(tokens[1]));
+    //   console.log("ID: " + responsePayload.sub);
+    //   console.log('Full Name: ' + responsePayload.name);
+    //   console.log('Given Name: ' + responsePayload.given_name);
+    //   console.log('Family Name: ' + responsePayload.family_name);
+    //   console.log("Image URL: " + responsePayload.picture);
+    //   console.log("Email: " + responsePayload.email);
+      
+    //   // cache the jwt token into cookie for 1 hour to be reused later
+    //   // Get current time
+    //   var now = new Date();
+
+    //   // Set expiration time to 1 hour from now
+    //   var expirationTime = new Date(now.getTime() + 1 * 3600 * 1000); // 1 hour = 3600 seconds * 1000 milliseconds
+
+    //   // Construct the cookie string
+    //   var cookieString = "user_jwt=" + encodeURIComponent(tokens[1]) + "; expires=" + expirationTime.toUTCString() + "; path=/";
+
+    //   // Set the cookie
+    //   document.cookie = cookieString;
+    // }
+    // window.onload = function() {
+    //   google.accounts.id.initialize({
+    //     client_id: "1010900816162-tecnq3ip1pcudnmhv2ohnmscu6h49s6u.apps.googleusercontent.com",
+    //     callback: handleCredentialResponse
+    //   });
+    //   google.accounts.id.renderButton(
+    //     document.getElementById("abc"), {
+    //       theme: "outline",
+    //       size: "large"
+    //     } // customization attributes
+    //   );
+    //   google.accounts.id.prompt(); // also display the One Tap dialog
+    // }
+
+    async function onGoogleSignUp(googleUser) {
+        // Trigger Google Sign-in
+
+        try {
+            console.log(googleUser);
+            console.log("lakshin1");
+
+          //  const profile = googleUser.getBasicProfile();
+         //console.log(profile);
+
+         const tokens = googleUser.credential.split(".");
+         const responsePayload = JSON.parse(atob(tokens[1]));
+           // var profile =googleUser.getBasicProfile();
+            
+           // const id_token = googleUser.getAuthResponse().id_token;
+
+                
+            const username = responsePayload.name;
+            const email = responsePayload.email;
+            const password = '123'; // default password in Google registration
+            const profileImage = responsePayload.picture;
+            //console.log(responsePayload.picture);
+            const bio = 'Hey there'; // default bio in Google registration
+
+            console.log(username);
+            // Ensure required fields are filled
+            if (!username || !email || !password) {
+                alert('Username, Email, and Password are required');
+                return;
+            }
+
+            // const formData = new FormData();
+            // formData.append('username', username);
+            // formData.append('email', email);
+            // formData.append('password', password);
+            // formData.append('profileImage', profileImage);
+            // formData.append('bio', bio);
+           // formData.append('id_token', id_token);
+
+            const response = await fetch('/api/auth/signup_google', {
+                method: 'POST',
+                headers: {
+        'Content-Type': 'application/json',
+        
+      },
+      body: JSON.stringify({  username, email, password, bio , profileImage })
+              
+            });
+
+            if (response.ok) {
+                alert('Signup successful!');
+                window.location.href = `index.html`;
+            } else {
+                const data = await response.json();
+                if (data.message.includes('exists')) {
+                    alert('Username already exists. Please choose a different username.');
+                } else {
+                    alert('Signup failed. Please try again later.');
+                }
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred during Google signup. Please try again.');
+        }
+    }
+</script>
+
+</body>
+</html>
