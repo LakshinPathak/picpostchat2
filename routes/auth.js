@@ -165,14 +165,13 @@ router.post('/signup', upload.single('profileImage'), async (req, res) => {
 router.post('/signup_google', async (req, res) => {
   try {
     const { username, email, password, bio , profileImage} = req.body;
-    console.log("mishraaa1");
-    console.log(username+ email+ bio+password+profileImage);
-    console.log("mishraaa2");
-
+  
+   
+  
     let profileImageUrl = '';
 
    
-      console.log("hello1");
+     // console.log("hello1");
       profileImageUrl = profileImage ;
      
   
@@ -204,40 +203,6 @@ router.post('/signup_google', async (req, res) => {
 });
 
 
-
-
-
-
-// Google Login Routes
-// router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-// router.get('/google/callback',
-//   passport.authenticate('google', { failureRedirect: '/login' }),
-//   (req, res) => {
-//     // Successful authentication, redirect home.
-//     const token = jwt.sign({ id: req.user._id }, 'secret', { expiresIn: '1h' });
-//     res.status(200).json({ token, username: req.user.username, isAdmin: req.user.isAdmin });
-//   }
-// );
-
-
-
-// // Google Login Routes
-// router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-// router.get('/google/callback',
-//   passport.authenticate('google', { failureRedirect: '/login' }),
-//   async (req, res) => {
-//     // Successful authentication, send token
-//     const token = jwt.sign({ id: req.user._id }, 'secret', { expiresIn: '1h' });
-//     res.status(200).json({ token, username: req.user.username, isAdmin: req.user.isAdmin });
-
-//     // Optionally, you can send a registration email here if it's a new user
-//     if (req.user.isNewUser) {
-//       await sendRegistrationEmail(req.user.email, req.user.username);
-//     }
-//   }
-// );
 
 
 
@@ -301,13 +266,12 @@ router.post('/login', async (req, res) => {
 router.post('/login_google', async (req, res) => {
   try {
     const { username, password } = req.body;
-    console.log("lakshinnnnnnnnn");
-    console.log(username);
-
+   
+   
     // Check if user exists
     const user = await User.findOne({ username });
-    console.log(user);
-    console.log(user.profileImageUrl);
+   // console.log(user);
+    //console.log(user.profileImageUrl);
     if (!user ) {
       return res.status(400).json({ message: 'Invalid Username' });
     }
@@ -338,7 +302,7 @@ router.get('/:username', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
     console.log(user.profileImageUrl);
-    console.log("jinan1234");
+    
 
 
     res.status(200).json({
@@ -581,13 +545,6 @@ router.delete('/:username/delete_user', verifyToken, verifyAdmin, async (req, re
     
 
      const id_user=user._id;
-
-    //  const message = await Message.find({
-    //   $or: [
-    //     { userid: user._id },
-    //     { recpid: user._id }
-    //   ]
-    // });
     
 
 
@@ -631,7 +588,7 @@ router.delete('/:username/delete_user', verifyToken, verifyAdmin, async (req, re
       { $pull: { comments: { user: user._id } } }
     );
 
-
+ // Remove the messages
    await Message.deleteMany({
       $or: [
         { userid: user._id },
@@ -725,6 +682,7 @@ router.delete('/delete_user_from_profile', verifyToken, async (req, res) => {
       { $pull: { comments: { user: user._id } } }
     );
 
+    // Remove the messages
     await Message.deleteMany({
       $or: [
         { userid: user._id },
