@@ -9,7 +9,7 @@ const cloudinary = require('cloudinary').v2;
 const streamifier = require('streamifier');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-
+const bcrypt = require('bcrypt');
 
 // Configure Cloudinary
 cloudinary.config({
@@ -113,6 +113,7 @@ router.post('/signup', upload.single('profileImage'), async (req, res) => {
     const { username, email, password, bio} = req.body;
     
     console.log(username+ email+ bio+password);
+
    
 
     let profileImageUrl = '';
@@ -120,19 +121,24 @@ router.post('/signup', upload.single('profileImage'), async (req, res) => {
 
     if (req.file) {
       console.log("file below");
-    console.log(req.file);
+   // console.log(req.file);
       profileImageUrl = await uploadImageToCloudinary(req.file) ;
     }
   
   
-    const userExists = await User.findOne({ username });
+   
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log(hashedPassword);
+
+    const userExists = await User.findOne({ username : username});
+    console.log(userExists)
     if (userExists) {
       return res.status(400).json({ message: 'User with this username already exists' });
     }
 
-    //const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = new User({ username, email, password , profileImageUrl , bio: bio, isAdmin:false});
+    const newUser = new User({ username: username, email: email, password: hashedPassword , profileImageUrl: profileImageUrl , bio: bio, isAdmin:false});
+    console.log(newUser);
     await newUser.save();
 
 
@@ -175,9 +181,9 @@ router.post('/signup_google', async (req, res) => {
       return res.status(400).json({ message: 'User with this username already exists' });
     }
 
-    //const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({ username, email, password , profileImageUrl , bio: bio, isAdmin:false});
+    const newUser = new User({ username: username, email: email, password : hashedPassword, profileImageUrl: profileImageUrl , bio: bio, isAdmin:false});
     await newUser.save();
 
 
@@ -262,10 +268,16 @@ router.post('/login', async (req, res) => {
     if (!user ) {
       return res.status(400).json({ message: 'Invalid Username' });
     }
-    if(password!=user.password)
-      {
-        return res.status(400).json({ message: 'Invalid password' });
-      }
+    if (!(await bcrypt.compare(password, user.password))) {
+      return res.status(400).json({ message: 'Invalid password' });
+    }
+
+    // if(password!=user.password)
+    //   {
+    //     return res.status(400).json({ message: 'Invalid password' });
+    //   }
+
+      
 
     // Sign JWT token
     const token = jwt.sign({ id: user._id }, 'secret', { expiresIn: '1h' });
@@ -299,10 +311,9 @@ router.post('/login_google', async (req, res) => {
     if (!user ) {
       return res.status(400).json({ message: 'Invalid Username' });
     }
-    if(password!=user.password)
-      {
-        return res.status(400).json({ message: 'Invalid password' });
-      }
+    if (!(await bcrypt.compare(password, user.password))) {
+      return res.status(400).json({ message: 'Invalid password' });
+    }
 
     // Sign JWT token
     const token = jwt.sign({ id: user._id }, 'secret', { expiresIn: '1h' });
@@ -485,11 +496,12 @@ router.post('/createadmin', checkSecurityKey, async (req, res) => {
       const { username, email, password } = req.body;
 
       const userExists = await User.findOne({ username });
+      const hashedPassword = await bcrypt.hash(password, 10);
       if (userExists) {
           return res.status(400).json({ message: 'User with this username already exists' });
       }
 
-      const newUser = new User({ username, email, password, isAdmin: true });  
+      const newUser = new User({ username: username,email:  email, password: hashedPassword, isAdmin: true });  
       await newUser.save();
 
       res.status(201).json({ message: 'Admin user created successfully' });
@@ -531,7 +543,7 @@ router.get('/:username/fetch_users', verifyToken, verifyAdmin, async (req, res) 
 router.put('/:username/update_user', verifyToken, verifyAdmin, async (req, res) => {
   try {
     
-    const { email, password, username } = req.body;
+    const { email, username } = req.body;
     
     const user = await User.findOne({username: username })
     if (!user) {
@@ -539,7 +551,7 @@ router.put('/:username/update_user', verifyToken, verifyAdmin, async (req, res) 
     }
 
     if (email) user.email = email;
-    if (password) user.password = password;
+  //  if (password) user.password = password;
 
     await user.save();
 
