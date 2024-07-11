@@ -578,8 +578,17 @@ router.delete('/:username/delete_user', verifyToken, verifyAdmin, async (req, re
 
      const relation = await Relationship.find({username:username });
 
+    
 
      const id_user=user._id;
+
+    //  const message = await Message.find({
+    //   $or: [
+    //     { userid: user._id },
+    //     { recpid: user._id }
+    //   ]
+    // });
+    
 
 
      // Remove the user from Relationship records where they are being followed
@@ -623,6 +632,13 @@ router.delete('/:username/delete_user', verifyToken, verifyAdmin, async (req, re
     );
 
 
+   await Message.deleteMany({
+      $or: [
+        { userid: user._id },
+        { recpid: user._id }
+      ]
+    });
+    
 
 
     res.status(200).json({ message: 'User deleted successfully' });
@@ -665,6 +681,7 @@ router.delete('/delete_user_from_profile', verifyToken, async (req, res) => {
      const relation = await Relationship.find({username:username });
 
 
+
      const id_user=user._id;
 
 
@@ -708,6 +725,12 @@ router.delete('/delete_user_from_profile', verifyToken, async (req, res) => {
       { $pull: { comments: { user: user._id } } }
     );
 
+    await Message.deleteMany({
+      $or: [
+        { userid: user._id },
+        { recpid: user._id }
+      ]
+    });
 
 
 
