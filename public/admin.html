@@ -180,10 +180,10 @@ const urlParams = new URLSearchParams(window.location.search);
 
     async function updateUser(username, button) {
       const email = prompt("Enter new email:");
-      const password = prompt("Enter new password:");
-
-      if (!email || !password) {
-        alert("Email and password cannot be empty!");
+     // const password = prompt("Enter new password:");
+//|| !password
+      if (!email ) {
+        alert("Email cannot be empty!");
         return;
       }
 
@@ -194,7 +194,7 @@ const urlParams = new URLSearchParams(window.location.search);
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + localStorage.getItem('token')
           },
-          body: JSON.stringify({ email, password, username })
+          body: JSON.stringify({ email, username })
         });
 
         if (!response.ok) {
