@@ -59,21 +59,26 @@ document.addEventListener('DOMContentLoaded', async function () {
           
           const suggestionCard = document.createElement('div');
           suggestionCard.className = 'card';
+        //  suggestionCard.className = 'MuiCard-root';
 
           const profileImage = document.createElement('img');
           profileImage.src = suggestion.profileImageUrl || 'assets/img/default-profile.png';
           profileImage.alt = suggestion.username;
+          profileImage.className = 'MuiAvatar-root';
 
           const infoDiv = document.createElement('div');
           infoDiv.className = 'info';
+         // infoDiv.className = 'MuiCardContent-root';
 
           const usernameDiv = document.createElement('div');
-          usernameDiv.className = 'name';
+        //  usernameDiv.className = 'name';
+          usernameDiv.className = 'MuiTypography-root MuiTypography-body1';
           usernameDiv.textContent = suggestion.username;
 
 
           const followButton = document.createElement('button');
           followButton.className = 'follow-btn';
+         // followButton.className = 'MuiButton-root MuiButton-contained';
           followButton.textContent = 'Follow';
           followButton.dataset.username = suggestion.username;
 
@@ -338,27 +343,31 @@ async function loadUserPosts(username) {
       // Append new posts
       postsData.forEach(post => {
           const postElement = document.createElement('div');
-          postElement.className = 'post';
+         // postElement.className = 'post';
+          postElement.className = 'MuiCard-root';
           postElement.dataset.username = username;
 
           // Create post image element
           const postImage = document.createElement('img');
           postImage.src = post.image;
           postImage.alt = post.caption;
-          postImage.className = 'post-image';
+        //  postImage.className = 'post-image';
+          postImage.className = 'MuiCardMedia-root post-image';
           postElement.appendChild(postImage);
 
           // Create post caption element
           const postCaption = document.createElement('p');
           postCaption.textContent = "Caption: "+post.caption;
-          postCaption.className = 'post-caption';
+         // postCaption.className = 'post-caption';
+          postCaption.className = 'MuiTypography-root MuiTypography-body1';
           postElement.appendChild(postCaption);
 
 
            // Create post username element
            const postusername = document.createElement('p');
            postusername.textContent = "Username: "+ post.username;
-           postusername.className = 'post-username';
+           //postusername.className = 'post-username';
+           postusername.className = 'MuiTypography-root MuiTypography-body2';
            postElement.appendChild(postusername);
 
 
@@ -702,4 +711,5 @@ document.getElementById('logout-link').addEventListener('click', function(event)
 
 
 
-  
+
+

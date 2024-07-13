@@ -729,26 +729,180 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* feed.css */
+.MuiCard-root {
+  margin: 20px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.MuiAvatar-root {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.MuiCardContent-root {
+  display: flex;
+  flex-direction: column;
+}
+
+.MuiButton-root {
+  margin-top: 10px;
+  background-color: #1976d2;
+  color: #fff;
+}
+
+.MuiButton-root.unfollow {
+  background-color: #f44336;
+}
+
+.MuiButton-root:hover {
+  background-color: #1565c0;
+}
+
+.MuiButton-root.unfollow:hover {
+  background-color: #d32f2f;
+}
+
+.MuiTypography-root {
+  font-size: 1rem;
+  color: #333;
+}
+
+.post-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.like-button-class {
+  background-color: #ff5722;
+  color: #fff;
+}
+
+.comment-button-class {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+
+
+
+
+
+/* Remove existing styles that conflict or are redundant with Material UI */
+/* Add Material UI styles where necessary */
+.navbar {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px; /* Adjust width as needed */
+  z-index: 1;
+}
+
+.search-input-container {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 25px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 8px 15px;
+}
+
+.search-icon {
+  font-size: 20px;
+  margin-right: 10px;
+  opacity: 0.7;
+}
+
+.nav-links ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.nav-links li {
+  margin-bottom: 10px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+
+.nav-links a:hover {
+  background-color: #f0f0f0;
+}
+
+.profile_img img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.username p {
+  margin: 0;
+}
+
+.logout a {
+  color: #ff0000;
+  text-decoration: none;
+}
+
+
   </style>
   <title>Feed</title>
 </head>
 
 <body>
   <!-- Navigation bar -->
-  <div class="navbar">
+  <!-- <div class="navbar">
     <div class="logo">
       <img class="c-panel__img" src="PicPostChat1.gif" alt="PicPostChat">
     </div>
-    <!-- <div class="searchbar">
-      <input type="text" id="searchInput" placeholder="Search for users...">
-      <div id="searchResults"></div>
-    </div> -->
-
-    <!-- <div class="search-container">
-      <img src="assets/images/search.png" alt="Search">
-      <input type="text" id="search-bar" placeholder="Search users...">
-      <div id="search-results" class="search-results"></div>
-  </div> -->
+   
 
 
 
@@ -785,7 +939,51 @@
         </div>
       </div>
     </div>
+  </div> -->
+
+
+
+
+
+
+  <div class="navbar">
+    <div class="logo">
+      <img class="c-panel__img" src="PicPostChat1.gif" alt="PicPostChat">
+    </div>
+    
+    <div class="search-container">
+      <div class="search-input-container">
+        <span class="material-icons search-icon">search</span>
+        <input type="text" id="search-bar" placeholder="Search">
+      </div>
+      <div id="search-results" class="search-results"></div>
+    </div>
+  
+    <div class="nav-links">
+      <ul class="nav-group">
+        <li class="nav-item"><a href="#" id="home-link"><span class="material-icons">home</span>  Home</a></li>
+        <li class="nav-item"><a href="profile.html"><span class="material-icons">account_circle</span>  Profile</a></li>
+        <li class="nav-item"><a href="message.html"><span class="material-icons">message</span>  Messages</a></li>
+        <li class="nav-item"><a href="bookmark.html"><span class="material-icons">bookmark</span>  Bookmarked Post</a></li>
+        <li class="nav-item"><a href="setting.html"><span class="material-icons">settings</span>  Settings</a></li>
+      </ul>
+    </div>
+  
+    <div class="action">
+      <div class="profile">
+        <div class="profile_img">
+          <img id="profileImage" crossorigin='anonymous' src="#" alt="Profile Image">
+        </div>
+        <div class="username">
+          <p>Welcome, <span id="username1"></span></p>
+        </div>
+        <div class="logout">
+          <a href="/index.html" id="logout-link">Logout</a>
+        </div>
+      </div>
+    </div>
   </div>
+  
 
   <main class="container mt-5">
     <div class="row">
@@ -808,6 +1006,11 @@
     </div>
   </main>
   <script src="feed.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mui/material@5.9.1/dist/material-ui.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+
+  
   
   
 </body>
