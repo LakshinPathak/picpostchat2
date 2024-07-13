@@ -112,7 +112,7 @@ router.post('/signup', upload.single('profileImage'), async (req, res) => {
   try {
     const { username, email, password, bio} = req.body;
     
-    console.log(username+ email+ bio+password);
+    //console.log(username+ email+ bio+password);
 
    
 
@@ -120,7 +120,7 @@ router.post('/signup', upload.single('profileImage'), async (req, res) => {
 
 
     if (req.file) {
-      console.log("file below");
+     // console.log("file below");
    // console.log(req.file);
       profileImageUrl = await uploadImageToCloudinary(req.file) ;
     }
@@ -129,16 +129,16 @@ router.post('/signup', upload.single('profileImage'), async (req, res) => {
    
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword);
+   // console.log(hashedPassword);
 
     const userExists = await User.findOne({ username : username});
-    console.log(userExists)
+    //console.log(userExists)
     if (userExists) {
       return res.status(400).json({ message: 'User with this username already exists' });
     }
 
     const newUser = new User({ username: username, email: email, password: hashedPassword , profileImageUrl: profileImageUrl , bio: bio, isAdmin:false});
-    console.log(newUser);
+    //console.log(newUser);
     await newUser.save();
 
 
@@ -301,7 +301,7 @@ router.get('/:username', async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    console.log(user.profileImageUrl);
+    //console.log(user.profileImageUrl);
     
 
 
